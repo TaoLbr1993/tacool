@@ -10,6 +10,8 @@
 ### syscript.py ###
 __This file includes some tools used as system scripts.__
 
+___*Warning: In Windows, the script will stop if certain command crashes because of the Program Compatibility Assistant Service.___
+
     class multiCommand: run several commands with process pool.
         def __init__(self,cmds,maxpool):
             :param cmds: List of cmd. Every cmd is in form of subprocess.Popen()

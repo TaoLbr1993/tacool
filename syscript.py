@@ -39,7 +39,7 @@ class MultiCommand:
                     if self.cmdq.qsize()>0:
                         cmd_dict = self.cmdq.get()
                         print(cmd_dict)
-                        res = subprocess.check_output(cmd_dict['cmd'])
+                        res = subprocess.run(cmd_dict['cmd'],shell=False)
                         mutex.acquire()
                         result[cmd_dict['idx']] = res
                         mutex.release()
@@ -57,7 +57,7 @@ class MultiCommand:
             threadList[i].start()
         for i in range(length):
             threadList[i].join()
-        return [i.decode() for i in result]
+        return [i.stdout.decode() if i.stdout else None for i in result]
 
 if __name__ == '__main__':
     cmds = [
