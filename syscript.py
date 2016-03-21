@@ -23,11 +23,13 @@ class MultiCommand:
             self.cmd_queue.put({'idx':i,'cmd':cmd})
         self.index = 0
 
-    def run(self):
+    def run(self,show=True):
         '''
-        :return: List of command output in order of self.cmds
-        '''
+        Run function.
 
+        :param show: if show == True then the function will show the information while running(including command and its result).
+        :return: List of command output in order of self.cmds.
+        '''
         class myThread(threading.Thread):
             def __init__(self,cmdq):
                 threading.Thread.__init__(self)
@@ -39,7 +41,12 @@ class MultiCommand:
                     if self.cmdq.qsize()>0:
                         cmd_dict = self.cmdq.get()
                         print(cmd_dict)
-                        res = subprocess.run(cmd_dict['cmd'],shell=False)
+                        try:
+                            res = subprocess.check_output(cmd_dict['cmd'])
+                            print(cmd_dict['cmd'],' >> finished')
+                        except Exception:
+                            print(cmd_dict['cmd'],' >> error')
+
                         mutex.acquire()
                         result[cmd_dict['idx']] = res
                         mutex.release()
@@ -57,7 +64,7 @@ class MultiCommand:
             threadList[i].start()
         for i in range(length):
             threadList[i].join()
-        return [i.stdout.decode() if i.stdout else None for i in result]
+        return [i.decode() if i else None for i in result]
 
 if __name__ == '__main__':
     cmds = [
