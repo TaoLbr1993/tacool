@@ -21,3 +21,8 @@ ___*Warning: In Windows, the script will stop if certain command crashes because
             run the commands.
             :return: List of command output in order of self.cmds
 
+### toy.py ###
+__This file includes some tools which looks useless :J__
+
+
+    def pic2
